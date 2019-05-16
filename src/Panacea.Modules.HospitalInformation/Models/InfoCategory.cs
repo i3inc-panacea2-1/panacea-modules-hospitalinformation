@@ -24,29 +24,4 @@ namespace Panacea.Modules.HospitalInformation.Models
 
     }
 
-    public class MapInfoCategory : InfoCategory
-    {
-        public MapInfoCategory(double lat, double lng)
-        {
-            Name = "Find us";
-            Content = new MapOnly(lat, lng);
-            TSize = 2;
-        }
-
-        public Control Content { get; set; }
-    }
-
-    public class ContactInfoCategory: InfoCategory
-    {
-        public ContactInfoCategory()
-        {
-            Name = "Contact us";
-            Content = new Contact();
-            TSize = 2;
-            Img = "pack://application:,,,/UserPlugins.HospitalInformation;component/Pictures/mail.png";
-        }
-
-        public Control Content { get; set; }
-    }
-
 }

@@ -3,15 +3,15 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:local="clr-namespace:UserPlugins.HospitalInformation"
+    xmlns:local="clr-namespace:Panacea.Modules.HospitalInformation"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:shared="clr-namespace:PanaceaLib.Controls;assembly=PanaceaLib"
+    xmlns:shared1="clr-namespace:Panacea.Controls;assembly=Panacea.Controls"
     Name="Main"
     d:DesignHeight="450"
     d:DesignWidth="800"
     Background="#f5f5f5"
     mc:Ignorable="d">
-    <Grid DataContext="{Binding ElementName=Main, Path=ViewModel}">
+    <Grid>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition />
@@ -22,13 +22,13 @@
                 <RowDefinition />
                 <RowDefinition />
                 <RowDefinition />
-               
+
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition />
                 <ColumnDefinition />
-                
+
             </Grid.ColumnDefinitions>
             <Border
                 Grid.Row="1"
@@ -44,78 +44,86 @@
                 </Border.Effect>
 
             </Border>
-            <TextBlock Text="{Binding Category.Name}"
-                           FontSize="{DynamicResource FontSize-Large}"
-                           FontWeight="DemiBold"
-                           Grid.Row="1"
-                           Grid.Column="1"
-                           Grid.ColumnSpan="3"
-                       VerticalAlignment="Bottom"/>
-            <TextBlock Text="{Binding Source={x:Static local:HospitalInformationPage.GlobalSettings}, Path=DisplayName}"
-                           FontSize="{DynamicResource FontSize-Normal}"
-                           Foreground="#777777"
-                           Grid.Row="2"
-                           Grid.Column="1"
-                           Grid.ColumnSpan="3"
-                       VerticalAlignment="Top"/>
+            <TextBlock
+                Grid.Row="1"
+                Grid.Column="1"
+                Grid.ColumnSpan="3"
+                VerticalAlignment="Bottom"
+                FontSize="{DynamicResource FontSize-Large}"
+                FontWeight="DemiBold"
+                Text="{Binding Category.Name}" />
+            <TextBlock
+                Grid.Row="2"
+                Grid.Column="1"
+                Grid.ColumnSpan="3"
+                VerticalAlignment="Top"
+                FontSize="{DynamicResource FontSize-Normal}"
+                Foreground="#777777"
+                Text="{Binding Source={x:Static local:HospitalInformationPlugin.GlobalSettings}, Path=DisplayName}" />
 
-            <TextBlock Text="{Binding Category.Description}"
-                           FontSize="{DynamicResource FontSize-Normal}"
-                           
-                           Grid.Row="4"
-                           Grid.Column="0"
-                           Grid.ColumnSpan="10"
-                       VerticalAlignment="Top"
-                       Margin="30 20"
-                       TextWrapping="Wrap"/>
+            <TextBlock
+                Grid.Row="4"
+                Grid.Column="0"
+                Grid.ColumnSpan="10"
+                Margin="30,20"
+                VerticalAlignment="Top"
+                FontSize="{DynamicResource FontSize-Normal}"
+                Text="{Binding Category.Description}"
+                TextWrapping="Wrap" />
             <Grid
                 Grid.Row="5"
                 Grid.RowSpan="20"
                 Grid.ColumnSpan="20"
-                Margin="20" >
+                Margin="20">
                 <ItemsControl ItemsSource="{Binding Pages}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Button Content="{Binding Name}"
-                                    Style="{DynamicResource PrimaryButton}"
-                                    Command="{Binding ElementName=Main, Path=ViewModel.OpenCommand}"
-                                    CommandParameter="{Binding}"/>
+                            <Button
+                                Command="{Binding ElementName=Main, Path=ViewModel.OpenCommand}"
+                                CommandParameter="{Binding}"
+                                Content="{Binding Name}"
+                                Style="{DynamicResource PrimaryButton}" />
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <WrapPanel Margin="150 0"  VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            <WrapPanel
+                                Margin="150,0"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                 </ItemsControl>
-                
+
             </Grid>
         </Grid>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition />
-               
+
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-               
+
                 <ColumnDefinition />
                 <ColumnDefinition />
                 <ColumnDefinition />
 
             </Grid.ColumnDefinitions>
-            <Border Margin="20,20,10,10" Background="White"
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Center">
+            <Border
+                Margin="20,20,10,10"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Background="White">
                 <Border.Effect>
                     <DropShadowEffect
                         BlurRadius="8"
                         Opacity=".2"
                         ShadowDepth="0" />
                 </Border.Effect>
-                <shared:CacheImage
-                    VerticalAlignment="Center"
+                <shared1:CacheImage
                     HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
                     ImageUrl="{Binding Category.ImgThumbnail.Image}"
                     Stretch="Uniform" />
             </Border>

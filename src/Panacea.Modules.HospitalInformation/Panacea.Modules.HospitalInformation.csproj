@@ -82,6 +82,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Models\MediaPreview.cs" />
     <Compile Include="PictureAnalysis.cs" />
     <Compile Include="ViewModels\HospitalInformationDetailsViewModel.cs" />
     <Compile Include="ViewModels\HospitalInformationListViewModel.cs" />

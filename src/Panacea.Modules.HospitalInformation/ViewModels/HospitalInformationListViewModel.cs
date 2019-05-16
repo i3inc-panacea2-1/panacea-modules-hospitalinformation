@@ -98,13 +98,7 @@ namespace Panacea.Modules.HospitalInformation.ViewModels
                     catch { }
 
                 }, TaskContinuationOptions.ExecuteSynchronously);
-            bool loaded = false;
-            LoadedCommand = new RelayCommand(async (args) =>
-            {
-                if (loaded) return;
-                loaded = true;
-                await GetDefaultInfoCategoriesFromServer();
-            });
+            
             OpenCommand = new RelayCommand(async (args) => await GetInfoPagesFromServer(args as InfoCategory));
             OpenMapCommand = new RelayCommand(args =>
             {
@@ -118,6 +112,14 @@ namespace Panacea.Modules.HospitalInformation.ViewModels
             {
                 //todo _com.RaiseEvent("ShowContact", null, null);
             });
+        }
+
+        bool _loaded = false;
+        public override async void Activate()
+        {
+            if (_loaded) return;
+            _loaded = true;
+            await GetDefaultInfoCategoriesFromServer();
         }
 
 

@@ -25,7 +25,6 @@ namespace Panacea.Modules.HospitalInformation.ViewModels
 
         public List<InfoPage> Pages { get => _pages; }
 
-
         public HospitalInformationDetailsViewModel(
             PanaceaServices core,
             InfoCategory category, 
@@ -54,13 +53,11 @@ namespace Panacea.Modules.HospitalInformation.ViewModels
             }
             else if (ip.PageType.Equals("media"))
             {
-
-                var url = _server.RelativeToAbsoluteFromServer(ip.Url);
+                var url = _core.HttpClient.RelativeToAbsoluteUri(ip.Url);
                 _core
                     .GetMediaPlayerContainer()
-                    .Play(new MediaRequest(this, "HospitalInformation")
+                    .Play(new MediaRequest(new IPTVChannel() { URL = url })
                  {
-                     Channel = new IPTVChannel() { URL = url },
                      MediaPlayerPosition = MediaPlayerPosition.Standalone
 
                  });
@@ -77,7 +74,7 @@ namespace Panacea.Modules.HospitalInformation.ViewModels
 
         void OpenContent(InfoCategory category, InfoPage page)
         {
-            _core.GetUiManager().ThemeManager.Navigate(new PagePresenter(_window, _com, _server, _player, _socket, page, HospitalInformationPage.GlobalSettings, category), true);
+            _core.GetUiManager().Navigate(new PagePresenter(_window, _com, _server, _player, _socket, page, HospitalInformationPage.GlobalSettings, category), true);
         }
 
         private void OpenMediaPreview(object sender, MediaPreview mp)
@@ -106,17 +103,17 @@ namespace Panacea.Modules.HospitalInformation.ViewModels
                     if ((mp.media.Files.Count > 0 && !string.IsNullOrEmpty(mp.media.Files[0])) || (mp.media.Urls.Count > 0 && !string.IsNullOrEmpty(mp.media.Urls[0])))
                     {
                         if (mp.media.Files.Count > 0 && !string.IsNullOrEmpty(mp.media.Files[0]))
-                            _player.Play(
-                                new MediaPlayRequest(this, "HospitalInformation")
+                            _core
+                    .GetMediaPlayerContainer().Play(
+                                new MediaRequest(new IPTVChannel() { URL = mp.media.Urls[0] })
                                 {
-                                    Channel = new IPTVChannel() { URL = mp.media.Files[0] },
                                     FullscreenMode = FullscreenMode.FullscreenOnly
                                 });
                         else if (mp.media.Urls.Count > 0 && !string.IsNullOrEmpty(mp.media.Urls[0]))
-                            _player.Play(
-                                new MediaPlayRequest(this, "HospitalInformation")
+                            _core
+                    .GetMediaPlayerContainer().Play(
+                                new MediaRequest(new IPTVChannel() { URL = mp.media.Urls[0] })
                                 {
-                                    Channel = new IPTVChannel() { URL = mp.media.Urls[0] },
                                     FullscreenMode = FullscreenMode.FullscreenOnly
                                 });
                     }

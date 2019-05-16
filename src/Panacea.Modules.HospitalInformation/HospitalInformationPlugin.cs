@@ -1,11 +1,9 @@
 ﻿using Panacea.Core;
-using Panacea.Modularity;
 using Panacea.Modularity.UiManager;
 using Panacea.Modularity.UiManager.Extensions;
+using Panacea.Modules.HospitalInformation.Models;
+using Panacea.Modules.HospitalInformation.ViewModels;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Panacea.Modules.HospitalInformation
@@ -43,19 +41,20 @@ namespace Panacea.Modules.HospitalInformation
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+           
         }
 
         public Task EndInit()
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
 
         public Task Shutdown()
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
 
+        object _tile;
         private async Task GetHospitalSettings()
         {
             try
@@ -67,8 +66,8 @@ namespace Panacea.Modules.HospitalInformation
                     GlobalSettings = response.Result;
                     if (!string.IsNullOrEmpty(GlobalSettings.FrontImgThumbnail?.Image) && _tile == null)
                     {
-                        _tile = new TileLogo(GlobalSettings.FrontImgThumbnail?.Image);
-                        MainButton?.Frames.Add(_tile);
+                        //todo _tile = new TileLogo(GlobalSettings.FrontImgThumbnail?.Image);
+                        //todo MainButton?.Frames.Add(_tile);
                     }
                 }
             }
