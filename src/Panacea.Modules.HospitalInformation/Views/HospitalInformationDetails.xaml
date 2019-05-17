@@ -65,13 +65,14 @@
                 Grid.Row="4"
                 Grid.Column="0"
                 Grid.ColumnSpan="10"
+                Grid.RowSpan="3"
                 Margin="30,20"
                 VerticalAlignment="Top"
                 FontSize="{DynamicResource FontSize-Normal}"
                 Text="{Binding Category.Description}"
                 TextWrapping="Wrap" />
             <Grid
-                Grid.Row="5"
+                Grid.Row="7"
                 Grid.RowSpan="20"
                 Grid.ColumnSpan="20"
                 Margin="20">

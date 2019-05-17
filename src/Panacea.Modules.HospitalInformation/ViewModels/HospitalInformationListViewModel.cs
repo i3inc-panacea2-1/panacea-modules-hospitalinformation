@@ -102,9 +102,12 @@ namespace Panacea.Modules.HospitalInformation.ViewModels
             OpenCommand = new RelayCommand(async (args) => await GetInfoPagesFromServer(args as InfoCategory));
             OpenMapCommand = new RelayCommand(args =>
             {
-                //todo
-                //_window.ThemeManager.Navigate(new MapOnly(Convert.ToDouble(HospitalInformationPlugin.GlobalSettings.Lat, CultureInfo.InvariantCulture),
-                //    Convert.ToDouble(HospitalInformationPlugin.GlobalSettings.Lng, CultureInfo.InvariantCulture)));
+                _core
+                .GetUiManager()
+                .Navigate(
+                    new MapControlViewModel(
+                        Convert.ToDouble(HospitalInformationPlugin.GlobalSettings.Lat, CultureInfo.InvariantCulture),
+                        Convert.ToDouble(HospitalInformationPlugin.GlobalSettings.Lng, CultureInfo.InvariantCulture)));
             });
             MapVisibility = !string.IsNullOrEmpty(HospitalInformationPlugin.GlobalSettings.Lat) && !string.IsNullOrEmpty(HospitalInformationPlugin.GlobalSettings.Lng) ? Visibility.Visible : Visibility.Collapsed;
             ContactVisibility = HospitalInformationPlugin.GlobalSettings.IncludeContactUsTile ? Visibility.Visible : Visibility.Collapsed;
@@ -165,6 +168,7 @@ namespace Panacea.Modules.HospitalInformation.ViewModels
             {
                 try
                 {
+                    await Task.Delay(1000);
                     var response =
                        await _core.HttpClient.GetObjectAsync<List<InfoPage>>("hospitalinfo/get_infopages/" + cat.Id + "/");
                     if (!response.Success) return;

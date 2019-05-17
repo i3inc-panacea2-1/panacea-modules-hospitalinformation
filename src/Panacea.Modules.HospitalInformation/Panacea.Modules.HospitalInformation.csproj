@@ -61,11 +61,15 @@
     <Compile Include="PictureAnalysis.cs" />
     <Compile Include="ViewModels\HospitalInformationDetailsViewModel.cs" />
     <Compile Include="ViewModels\HospitalInformationListViewModel.cs" />
+    <Compile Include="ViewModels\MapControlViewModel.cs" />
     <Compile Include="Views\HospitalInformationDetails.xaml.cs">
       <DependentUpon>HospitalInformationDetails.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\HospitalInformationList.xaml.cs">
       <DependentUpon>HospitalInformationList.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MapControl.xaml.cs">
+      <DependentUpon>MapControl.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -83,6 +87,10 @@
     <Page Include="Views\HospitalInformationList.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\MapControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -114,11 +122,14 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.Maps.MapControl.WPF">
+      <Version>1.0.0.3</Version>
+    </PackageReference>
     <PackageReference Include="Panacea.Controls">
-      <Version>0.0.16-beta20190517-1515-gf0612ec</Version>
+      <Version>0.0.19-beta20190517-1722-g1539f99</Version>
     </PackageReference>
     <PackageReference Include="Panacea.Modularity.Media">
-      <Version>3.0.0</Version>
+      <Version>3.0.1</Version>
     </PackageReference>
     <PackageReference Include="Panacea.Modularity.MediaPlayerContainer">
       <Version>2.0.0</Version>

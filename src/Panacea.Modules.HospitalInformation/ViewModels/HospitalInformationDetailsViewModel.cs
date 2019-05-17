@@ -9,9 +9,11 @@ using System.Collections.Generic;
 using System.Windows.Input;
 using System.Windows.Media;
 using Panacea.Modularity.Media.Channels;
+using Panacea.Modules.HospitalInformation.Views;
 
 namespace Panacea.Modules.HospitalInformation.ViewModels
 {
+    [View(typeof(HospitalInformationDetails))]
     public class HospitalInformationDetailsViewModel : ViewModelBase
     {
         private readonly PanaceaServices _core;
