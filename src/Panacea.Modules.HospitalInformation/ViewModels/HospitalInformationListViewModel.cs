@@ -1,6 +1,6 @@
 ﻿using Panacea.Controls;
 using Panacea.Core;
-using Panacea.Core.Mvvm;
+using Panacea.Mvvm;
 using Panacea.Modularity.MediaPlayerContainer;
 using Panacea.Modularity.MediaPlayerContainer.Extensions;
 using Panacea.Modularity.UiManager.Extensions;
@@ -16,7 +16,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-
+using Panacea.Modularity.Media.Channels;
 
 namespace Panacea.Modules.HospitalInformation.ViewModels
 {
@@ -133,7 +133,7 @@ namespace Panacea.Modules.HospitalInformation.ViewModels
                 {
                     Tiles = new ObservableCollection<InfoCategory>(response.Result);
 
-                    if (!string.IsNullOrEmpty(HospitalInformationPlugin.GlobalSettings.Lat) && !String.IsNullOrEmpty(HospitalInformationPage.GlobalSettings.Lng))
+                    if (!string.IsNullOrEmpty(HospitalInformationPlugin.GlobalSettings.Lat) && !String.IsNullOrEmpty(HospitalInformationPlugin.GlobalSettings.Lng))
                     {
                         var lat = Convert.ToDouble(HospitalInformationPlugin.GlobalSettings.Lat, CultureInfo.InvariantCulture);
                         var lng = Convert.ToDouble(HospitalInformationPlugin.GlobalSettings.Lng, CultureInfo.InvariantCulture);
@@ -144,7 +144,7 @@ namespace Panacea.Modules.HospitalInformation.ViewModels
                         var url = _core.HttpClient.RelativeToAbsoluteUri(HospitalInformationPlugin.GlobalSettings.IntroductionVideo.Url);
                         _core
                             .GetMediaPlayerContainer()
-                            .Play(new MediaRequest(new IPTVChannel { URL = url }));
+                            .Play(new MediaRequest(new IptvMedia { URL = url }));
                     }
                 }
             }
@@ -186,9 +186,9 @@ namespace Panacea.Modules.HospitalInformation.ViewModels
         void OpenPages(InfoCategory ic, List<InfoPage> pages)
         {
 
-            var ipc = new InfoPagesContext(_window, _com, _server, _player, _websocket, ic, pages, HospitalInformationPage.GlobalSettings);
+            //todo var ipc = new InfoPagesContext(_window, _com, _server, _player, _websocket, ic, pages, HospitalInformationPage.GlobalSettings);
             //Host.ShowPopup(ipc, "", Shared.Controls.Popups.PopupType.None);
-            _window.ThemeManager.ShowPopup(ipc);
+            //todo _window.ThemeManager.ShowPopup(ipc);
         }
     }
 }

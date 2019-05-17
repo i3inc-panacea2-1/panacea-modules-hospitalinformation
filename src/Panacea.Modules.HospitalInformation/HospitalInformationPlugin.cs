@@ -21,8 +21,12 @@ namespace Panacea.Modules.HospitalInformation
 
         public Task BeginInit()
         {
-            _core.UserService.UserLoggedOut += UserService_UserChanged;
-            _core.UserService.UserLoggedIn += UserService_UserChanged;
+            if (_core.UserService != null)
+            {
+                _core.UserService.UserLoggedOut += UserService_UserChanged;
+                _core.UserService.UserLoggedIn += UserService_UserChanged;
+            }
+            
             return Task.CompletedTask;
         }
 

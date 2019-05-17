@@ -1,6 +1,4 @@
-﻿using Panacea.Multilinguality;
-using System;
-using System.ComponentModel;
+﻿using Panacea.Mvvm;
 
 namespace Panacea.Modules.HospitalInformation.Models
 {

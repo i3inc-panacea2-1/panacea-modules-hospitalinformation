@@ -1,24 +1,23 @@
 ﻿using Panacea.Controls;
 using Panacea.Core;
-using Panacea.Core.Mvvm;
+using Panacea.Mvvm;
 using Panacea.Modularity.MediaPlayerContainer;
 using Panacea.Modularity.MediaPlayerContainer.Extensions;
 using Panacea.Modularity.UiManager.Extensions;
 using Panacea.Modules.HospitalInformation.Models;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Windows.Input;
 using System.Windows.Media;
+using Panacea.Modularity.Media.Channels;
 
 namespace Panacea.Modules.HospitalInformation.ViewModels
 {
-    public class HospitalInformationDetailsViewModel: ViewModelBase
+    public class HospitalInformationDetailsViewModel : ViewModelBase
     {
         private readonly PanaceaServices _core;
         private readonly InfoCategory _category;
         private readonly List<InfoPage> _pages;
-      
+
         private readonly Brush _brush;
 
         public InfoCategory Category { get => _category; }
@@ -27,14 +26,14 @@ namespace Panacea.Modules.HospitalInformation.ViewModels
 
         public HospitalInformationDetailsViewModel(
             PanaceaServices core,
-            InfoCategory category, 
+            InfoCategory category,
             List<InfoPage> pages)
         {
 
             _core = core;
             _category = category;
             _pages = pages;
-           
+
             OpenCommand = new RelayCommand(args =>
             {
                 BindPage(args as InfoPage);
@@ -56,11 +55,11 @@ namespace Panacea.Modules.HospitalInformation.ViewModels
                 var url = _core.HttpClient.RelativeToAbsoluteUri(ip.Url);
                 _core
                     .GetMediaPlayerContainer()
-                    .Play(new MediaRequest(new IPTVChannel() { URL = url })
-                 {
-                     MediaPlayerPosition = MediaPlayerPosition.Standalone
+                    .Play(new MediaRequest(new IptvMedia() { URL = url })
+                    {
+                        MediaPlayerPosition = MediaPlayerPosition.Standalone
 
-                 });
+                    });
             }
             else if (!string.IsNullOrEmpty(ip.Content))
             {
@@ -74,7 +73,7 @@ namespace Panacea.Modules.HospitalInformation.ViewModels
 
         void OpenContent(InfoCategory category, InfoPage page)
         {
-            _core.GetUiManager().Navigate(new PagePresenter(_window, _com, _server, _player, _socket, page, HospitalInformationPage.GlobalSettings, category), true);
+            //todo _core.GetUiManager().Navigate(new PagePresenter(_window, _com, _server, _player, _socket, page, HospitalInformationPage.GlobalSettings, category), true);
         }
 
         private void OpenMediaPreview(object sender, MediaPreview mp)
@@ -82,14 +81,15 @@ namespace Panacea.Modules.HospitalInformation.ViewModels
             switch (mp.media.MediaType)
             {
                 case "photo":
-                    if (mp.media.Urls.Count > 0)
-                        _window.ThemeManager.Navigate(new SingleImage(mp.media.Urls[0]));
-                    else if (mp.media.Files.Count > 0)
-                        _window.ThemeManager.Navigate(new SingleImage(mp.media.Files[0]));
+                    //todo 
+                    //if (mp.media.Urls.Count > 0)
+                    //    _core.GetUiManager().Navigate(new SingleImage(mp.media.Urls[0]));
+                    //else if (mp.media.Files.Count > 0)
+                    //    _core.GetUiManager().Navigate(new SingleImage(mp.media.Files[0]));
                     break;
                 case "pdf":
-                    if (mp.media.Files.Count > 0)
-                        _com.RaiseEvent("books-openbook", sender, new Dictionary<string, dynamic>() { { "pdfBook", mp.media.Files[0] }, { "plugin", "HospitalInformation" } });
+                    //todo if (mp.media.Files.Count > 0)
+                    //todo _com.RaiseEvent("books-openbook", sender, new Dictionary<string, dynamic>() { { "pdfBook", mp.media.Files[0] }, { "plugin", "HospitalInformation" } });
                     break;
                 case "gallery":
                     List<string> photoPaths = new List<string>();
@@ -97,35 +97,37 @@ namespace Panacea.Modules.HospitalInformation.ViewModels
                         photoPaths.AddRange(mp.media.Files);
                     if (mp.media.Urls.Count > 0)
                         photoPaths.AddRange(mp.media.Urls);
-                    _com.RaiseEvent("PhotoGallery-OpenPhotos", sender, new Dictionary<string, dynamic>() { { "GalleryPhotos", photoPaths } });
+                    //todo _com.RaiseEvent("PhotoGallery-OpenPhotos", sender, new Dictionary<string, dynamic>() { { "GalleryPhotos", photoPaths } });
                     break;
                 case "video":
                     if ((mp.media.Files.Count > 0 && !string.IsNullOrEmpty(mp.media.Files[0])) || (mp.media.Urls.Count > 0 && !string.IsNullOrEmpty(mp.media.Urls[0])))
                     {
                         if (mp.media.Files.Count > 0 && !string.IsNullOrEmpty(mp.media.Files[0]))
                             _core
-                    .GetMediaPlayerContainer().Play(
-                                new MediaRequest(new IPTVChannel() { URL = mp.media.Urls[0] })
-                                {
-                                    FullscreenMode = FullscreenMode.FullscreenOnly
-                                });
+                                .GetMediaPlayerContainer()
+                                .Play(new MediaRequest(new IptvMedia() { URL = mp.media.Urls[0] })
+                                    {
+                                        FullscreenMode = FullscreenMode.FullscreenOnly
+                                    });
                         else if (mp.media.Urls.Count > 0 && !string.IsNullOrEmpty(mp.media.Urls[0]))
                             _core
-                    .GetMediaPlayerContainer().Play(
-                                new MediaRequest(new IPTVChannel() { URL = mp.media.Urls[0] })
-                                {
-                                    FullscreenMode = FullscreenMode.FullscreenOnly
-                                });
+                                .GetMediaPlayerContainer()
+                                .Play(
+                                    new MediaRequest(new IptvMedia() { URL = mp.media.Urls[0] })
+                                    {
+                                        FullscreenMode = FullscreenMode.FullscreenOnly
+                                    });
                     }
                     break;
                 case "url":
                     if (mp.media.Urls.Count > 0)
                     {
-                        if (!string.IsNullOrEmpty(mp.media.Urls[0]))
-                            _com.OpenUri("chromium:?url=" + mp.media.Urls[0]);
+                        //todo 
+                        //if (!string.IsNullOrEmpty(mp.media.Urls[0]))
+                        //     _core.GetUiManager()_com.OpenUri("chromium:?url=" + mp.media.Urls[0]);
                     }
                     break;
-                
+
             }
         }
 
