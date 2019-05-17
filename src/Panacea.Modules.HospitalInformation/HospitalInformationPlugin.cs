@@ -36,8 +36,9 @@ namespace Panacea.Modules.HospitalInformation
             return Task.CompletedTask;
         }
 
-        public void Call()
+        public async void Call()
         {
+            await GetHospitalSettings();
             _core
                 .GetUiManager()
                 .Navigate(new HospitalInformationListViewModel(_core));

@@ -115,7 +115,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Panacea.Controls">
-      <Version>0.0.12-beta20190517-0842-ge772d6b</Version>
+      <Version>0.0.16-beta20190517-1515-gf0612ec</Version>
     </PackageReference>
     <PackageReference Include="Panacea.Modularity.Media">
       <Version>3.0.0</Version>
