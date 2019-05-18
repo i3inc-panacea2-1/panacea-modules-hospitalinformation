@@ -168,7 +168,6 @@ namespace Panacea.Modules.HospitalInformation.ViewModels
             {
                 try
                 {
-                    await Task.Delay(1000);
                     var response =
                        await _core.HttpClient.GetObjectAsync<List<InfoPage>>("hospitalinfo/get_infopages/" + cat.Id + "/");
                     if (!response.Success) return;

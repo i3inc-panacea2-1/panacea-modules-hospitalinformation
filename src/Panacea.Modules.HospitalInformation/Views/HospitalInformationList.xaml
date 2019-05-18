@@ -7,6 +7,7 @@
     xmlns:local="clr-namespace:Panacea.Modules.HospitalInformation"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:mi="clr-namespace:Panacea.Controls;assembly=Panacea.Controls"
+    xmlns:behaviors="clr-namespace:Panacea.Controls.Behaviors;assembly=Panacea.Controls"
     xmlns:models="clr-namespace:Panacea.Modules.HospitalInformation.Models"
     xmlns:multilinguality1="clr-namespace:Panacea.Multilinguality;assembly=Panacea.Multilinguality"
     d:DesignHeight="900"
@@ -127,6 +128,7 @@
             Grid.ColumnSpan="10"
             HorizontalScrollBarVisibility="Auto"
             PanningMode="HorizontalOnly"
+            behaviors:ScrollViewerBehaviors.ScrollsHorizontally="true"
             VerticalScrollBarVisibility="Disabled">
             <ItemsControl
                 Margin="20,30,20,90"
