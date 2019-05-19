@@ -107,7 +107,7 @@ namespace Panacea.Modules.HospitalInformation.ViewModels
                         if (mp.media.Files.Count > 0 && !string.IsNullOrEmpty(mp.media.Files[0]))
                             _core
                                 .GetMediaPlayerContainer()
-                                .Play(new MediaRequest(new IptvMedia() { URL = mp.media.Urls[0] })
+                                .Play(new MediaRequest(new IptvMedia() { URL = mp.media.Files[0] })
                                     {
                                         FullscreenMode = FullscreenMode.FullscreenOnly
                                     });
