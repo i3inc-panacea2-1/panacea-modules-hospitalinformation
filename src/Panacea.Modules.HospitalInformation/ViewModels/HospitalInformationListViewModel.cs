@@ -9,20 +9,28 @@ using Panacea.Modules.HospitalInformation.Views;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Drawing;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using Panacea.Modularity.Media.Channels;
+using System.Windows.Media;
 
 namespace Panacea.Modules.HospitalInformation.ViewModels
 {
     [View(typeof(HospitalInformationList))]
     class HospitalInformationListViewModel : ViewModelBase
     {
+        private HospitalData _settings;
+        public HospitalData Settings
+        {
+            get => _settings;
+            set
+            {
+                _settings = value;
+                OnPropertyChanged();
+            }
+        }
 
         bool _videoPlayed;
         ObservableCollection<InfoCategory> _tiles;
@@ -50,8 +58,7 @@ namespace Panacea.Modules.HospitalInformation.ViewModels
 
         public string CategoriesText { get; protected set; }
 
-        public string DisplayName { get; protected set; }
-
+  
         public ICommand LoadedCommand { get; set; }
 
         public ICommand OpenCommand { get; set; }
@@ -70,35 +77,18 @@ namespace Panacea.Modules.HospitalInformation.ViewModels
         public Visibility MapVisibility { get; set; }
         public Visibility ContactVisibility { get; set; }
 
-        public HospitalInformationListViewModel(PanaceaServices core)
+        public HospitalInformationListViewModel(
+            PanaceaServices core, 
+            HospitalData settings,
+            List<InfoCategory> categories,
+            Brush color)
         {
             _core = core;
-            _logo = HospitalInformationPlugin.GlobalSettings.Img;
-            CategoriesText = HospitalInformationPlugin.GlobalSettings.CategoriesText;
-            DisplayName = HospitalInformationPlugin.GlobalSettings.DisplayName;
-            _core.HttpClient.DownloadDataAsync(HospitalInformationPlugin.GlobalSettings.ImgThumbnail.Image)
-                .ContinueWith(task =>
-                {
-                    try
-                    {
-                        var data = task.Result;
-                        using (var ms = new MemoryStream(data))
-                        {
-                            var bmp = new Bitmap(ms);
-                            PictureAnalysis.GetMostUsedColor(bmp);
-                            var c = PictureAnalysis.TenMostUsedColors.FirstOrDefault(col => Math.Abs(col.R - col.G) > 30 ||
-                                Math.Abs(col.G - col.B) > 30 || Math.Abs(col.B - col.R) > 30);
-                            if (c == null)
-                            {
-                                c = PictureAnalysis.MostUsedColor;
-                            }
-                            Color = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(c.R, c.G, c.B));
-                        }
-                    }
-                    catch { }
-
-                }, TaskContinuationOptions.ExecuteSynchronously);
-            
+            _settings = settings;
+            Color = color;
+            Tiles = new ObservableCollection<InfoCategory>(categories);
+            MapVisibility = !string.IsNullOrEmpty(_settings.Lat) && !string.IsNullOrEmpty(_settings.Lng) ? Visibility.Visible : Visibility.Collapsed;
+            ContactVisibility = _settings.IncludeContactUsTile ? Visibility.Visible : Visibility.Collapsed;
             OpenCommand = new RelayCommand(async (args) => await GetInfoPagesFromServer(args as InfoCategory));
             OpenMapCommand = new RelayCommand(args =>
             {
@@ -106,55 +96,34 @@ namespace Panacea.Modules.HospitalInformation.ViewModels
                 .GetUiManager()
                 .Navigate(
                     new MapControlViewModel(
-                        Convert.ToDouble(HospitalInformationPlugin.GlobalSettings.Lat, CultureInfo.InvariantCulture),
-                        Convert.ToDouble(HospitalInformationPlugin.GlobalSettings.Lng, CultureInfo.InvariantCulture)));
+                        Convert.ToDouble(_settings.Lat, CultureInfo.InvariantCulture),
+                        Convert.ToDouble(_settings.Lng, CultureInfo.InvariantCulture)));
             });
-            MapVisibility = !string.IsNullOrEmpty(HospitalInformationPlugin.GlobalSettings.Lat) && !string.IsNullOrEmpty(HospitalInformationPlugin.GlobalSettings.Lng) ? Visibility.Visible : Visibility.Collapsed;
-            ContactVisibility = HospitalInformationPlugin.GlobalSettings.IncludeContactUsTile ? Visibility.Visible : Visibility.Collapsed;
+            
             OpenContactCommand = new RelayCommand(args =>
             {
                 //todo _com.RaiseEvent("ShowContact", null, null);
             });
         }
 
-        bool _loaded = false;
-        public override async void Activate()
+        public override void Activate()
         {
-            if (_loaded) return;
-            _loaded = true;
-            await GetDefaultInfoCategoriesFromServer();
+            if (!string.IsNullOrEmpty(_settings.IntroductionVideo.Url) && !_videoPlayed)
+            {
+                _videoPlayed = true;
+                var url = _core.HttpClient.RelativeToAbsoluteUri(_settings.IntroductionVideo.Url);
+                var res = _core
+                    .GetMediaPlayerContainer()
+                    .Play(new MediaRequest(new IptvMedia { URL = url }));
+                res.Stopped += Res_Stopped;
+                res.Ended += Res_Stopped;
+                res.Error += Res_Stopped;
+            }
         }
 
-
-        private async Task GetDefaultInfoCategoriesFromServer()
+        private void Res_Stopped(object sender, EventArgs e)
         {
-            try
-            {
-                ServerResponse<List<InfoCategory>> response =
-                    await _core.HttpClient.GetObjectAsync<List<InfoCategory>>("hospitalinfo/get_infocategories/");
-                if (response.Success)
-                {
-                    Tiles = new ObservableCollection<InfoCategory>(response.Result);
-
-                    if (!string.IsNullOrEmpty(HospitalInformationPlugin.GlobalSettings.Lat) && !String.IsNullOrEmpty(HospitalInformationPlugin.GlobalSettings.Lng))
-                    {
-                        var lat = Convert.ToDouble(HospitalInformationPlugin.GlobalSettings.Lat, CultureInfo.InvariantCulture);
-                        var lng = Convert.ToDouble(HospitalInformationPlugin.GlobalSettings.Lng, CultureInfo.InvariantCulture);
-                    }
-                    if (!string.IsNullOrEmpty(HospitalInformationPlugin.GlobalSettings.IntroductionVideo.Url) && !_videoPlayed)
-                    {
-                        _videoPlayed = true;
-                        var url = _core.HttpClient.RelativeToAbsoluteUri(HospitalInformationPlugin.GlobalSettings.IntroductionVideo.Url);
-                        _core
-                            .GetMediaPlayerContainer()
-                            .Play(new MediaRequest(new IptvMedia { URL = url }));
-                    }
-                }
-            }
-            catch
-            {
-            }
-
+            _core.GetUiManager().GoBack();
         }
 
         public ICommand OpenMapCommand { get; set; }
@@ -175,7 +144,7 @@ namespace Panacea.Modules.HospitalInformation.ViewModels
 
                     if (pages.Count > 0)
                     {
-                        var vm = new HospitalInformationDetailsViewModel(_core, cat, pages);
+                        var vm = new HospitalInformationDetailsViewModel(_core, _settings, cat, pages);
                         _core.GetUiManager().Navigate(vm);
                     }
                 }

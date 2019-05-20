@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Panacea.Modules.HospitalInformation
+namespace Panacea.Modules.HospitalInformation.Views
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for PagePresenter.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class PagePresenter : UserControl
     {
-        public MainWindow()
+        public PagePresenter()
         {
             InitializeComponent();
         }

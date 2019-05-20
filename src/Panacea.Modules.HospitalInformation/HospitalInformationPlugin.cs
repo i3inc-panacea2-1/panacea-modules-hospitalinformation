@@ -4,6 +4,10 @@ using Panacea.Modularity.UiManager.Extensions;
 using Panacea.Modules.HospitalInformation.Models;
 using Panacea.Modules.HospitalInformation.ViewModels;
 using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Panacea.Modules.HospitalInformation
@@ -12,7 +16,9 @@ namespace Panacea.Modules.HospitalInformation
     {
         private readonly PanaceaServices _core;
         public static bool IntroVideoPlayed;
-        public static HospitalData GlobalSettings;
+        private HospitalData _settings;
+        List<InfoCategory> _categories;
+        System.Windows.Media.Brush _color;
 
         public HospitalInformationPlugin(PanaceaServices core)
         {
@@ -26,7 +32,7 @@ namespace Panacea.Modules.HospitalInformation
                 _core.UserService.UserLoggedOut += UserService_UserChanged;
                 _core.UserService.UserLoggedIn += UserService_UserChanged;
             }
-            
+
             return Task.CompletedTask;
         }
 
@@ -38,15 +44,32 @@ namespace Panacea.Modules.HospitalInformation
 
         public async void Call()
         {
-            await GetHospitalSettings();
+            if (_settings == null)
+            {
+                await _core
+                .GetUiManager()
+                .DoWhileBusy(async () =>
+                {
+                    try
+                    {
+                        await GetHospitalSettingsAsync();
+                        await GetCategoriesAsync();
+                        await GetPrimaryColorFromImageAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        _settings = null;
+                    }
+                });
+            }
             _core
                 .GetUiManager()
-                .Navigate(new HospitalInformationListViewModel(_core));
+                .Navigate(new HospitalInformationListViewModel(_core, _settings, _categories, _color));
         }
 
         public void Dispose()
         {
-           
+
         }
 
         public Task EndInit()
@@ -58,9 +81,39 @@ namespace Panacea.Modules.HospitalInformation
         {
             return Task.CompletedTask;
         }
+        private async Task GetCategoriesAsync()
+        {
+            try
+            {
+                var response =
+                    await _core.HttpClient.GetObjectAsync<List<InfoCategory>>("hospitalinfo/get_infocategories/");
+                if (response.Success)
+                {
+                    _categories = response.Result;
+                }
+            }
+            catch
+            {
+            }
+        }
 
-        object _tile;
-        private async Task GetHospitalSettings()
+        private async Task GetPrimaryColorFromImageAsync()
+        {
+            var data = await _core.HttpClient.DownloadDataAsync(_settings.ImgThumbnail.Image);
+            using (var ms = new MemoryStream(data))
+            {
+                var bmp = new Bitmap(ms);
+                PictureAnalysis.GetMostUsedColor(bmp);
+                var c = PictureAnalysis.TenMostUsedColors.FirstOrDefault(col => Math.Abs(col.R - col.G) > 30 ||
+                    Math.Abs(col.G - col.B) > 30 || Math.Abs(col.B - col.R) > 30);
+                if (c == null)
+                {
+                    c = PictureAnalysis.MostUsedColor;
+                }
+                _color = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(c.R, c.G, c.B));
+            }
+        }
+        private async Task GetHospitalSettingsAsync()
         {
             try
             {
@@ -68,17 +121,17 @@ namespace Panacea.Modules.HospitalInformation
                     await _core.HttpClient.GetObjectAsync<HospitalData>("hospitalinfo/get_hospitalinfo/");
                 if (response.Success)
                 {
-                    GlobalSettings = response.Result;
-                    if (!string.IsNullOrEmpty(GlobalSettings.FrontImgThumbnail?.Image) && _tile == null)
+                    _settings = response.Result;
+                    if (!string.IsNullOrEmpty(_settings.FrontImgThumbnail?.Image) /*&& _tile == null*/)
                     {
                         //todo _tile = new TileLogo(GlobalSettings.FrontImgThumbnail?.Image);
                         //todo MainButton?.Frames.Add(_tile);
                     }
                 }
+
+
             }
-            catch
-            {
-            }
+            catch { }
         }
     }
 }

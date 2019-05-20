@@ -59,7 +59,7 @@
                 VerticalAlignment="Top"
                 FontSize="{DynamicResource FontSize-Normal}"
                 Foreground="#777777"
-                Text="{Binding Source={x:Static local:HospitalInformationPlugin.GlobalSettings}, Path=DisplayName}" />
+                Text="{Binding Settings.DisplayName}" />
 
             <TextBlock
                 Grid.Row="4"
@@ -68,7 +68,7 @@
                 Grid.RowSpan="3"
                 Margin="30,20"
                 VerticalAlignment="Top"
-                FontSize="{DynamicResource FontSize-Normal}"
+                shared1:Material.RelativeFontSizeRatio="1.0"
                 Text="{Binding Category.Description}"
                 TextWrapping="Wrap" />
             <Grid
@@ -80,9 +80,10 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Button
-                                Command="{Binding ElementName=Main, Path=ViewModel.OpenCommand}"
+                                Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.OpenCommand}"
                                 CommandParameter="{Binding}"
                                 Content="{Binding Name}"
+                                shared1:Material.RelativeFontSizeRatio="1.0"
                                 Style="{DynamicResource PrimaryButton}" />
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>

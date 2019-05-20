@@ -26,8 +26,11 @@ namespace Panacea.Modules.HospitalInformation.ViewModels
 
         public List<InfoPage> Pages { get => _pages; }
 
+        public HospitalData Settings { get; set; }
+
         public HospitalInformationDetailsViewModel(
             PanaceaServices core,
+            HospitalData settings,
             InfoCategory category,
             List<InfoPage> pages)
         {
@@ -35,7 +38,7 @@ namespace Panacea.Modules.HospitalInformation.ViewModels
             _core = core;
             _category = category;
             _pages = pages;
-
+            Settings = settings;
             OpenCommand = new RelayCommand(args =>
             {
                 BindPage(args as InfoPage);
@@ -75,7 +78,7 @@ namespace Panacea.Modules.HospitalInformation.ViewModels
 
         void OpenContent(InfoCategory category, InfoPage page)
         {
-            //todo _core.GetUiManager().Navigate(new PagePresenter(_window, _com, _server, _player, _socket, page, HospitalInformationPage.GlobalSettings, category), true);
+            _core.GetUiManager().Navigate(new PagePresenterViewModel(page), true);
         }
 
         private void OpenMediaPreview(object sender, MediaPreview mp)
