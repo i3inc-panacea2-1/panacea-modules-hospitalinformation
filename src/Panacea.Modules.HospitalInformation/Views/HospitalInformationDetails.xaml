@@ -49,7 +49,7 @@
                 Grid.Column="1"
                 Grid.ColumnSpan="3"
                 VerticalAlignment="Bottom"
-                FontSize="{DynamicResource FontSize-Large}"
+                shared1:Material.RelativeFontSizeRatio="2.1"
                 FontWeight="DemiBold"
                 Text="{Binding Category.Name}" />
             <TextBlock
@@ -57,7 +57,7 @@
                 Grid.Column="1"
                 Grid.ColumnSpan="3"
                 VerticalAlignment="Top"
-                FontSize="{DynamicResource FontSize-Normal}"
+                shared1:Material.RelativeFontSizeRatio=".9"
                 Foreground="#777777"
                 Text="{Binding Settings.DisplayName}" />
 
