@@ -2,8 +2,6 @@
 using Panacea.Core;
 using Panacea.Mvvm;
 using Panacea.Modularity.MediaPlayerContainer;
-using Panacea.Modularity.MediaPlayerContainer.Extensions;
-using Panacea.Modularity.UiManager.Extensions;
 using Panacea.Modules.HospitalInformation.Models;
 using System.Collections.Generic;
 using System.Windows.Input;
@@ -11,6 +9,7 @@ using System.Windows.Media;
 using Panacea.Modularity.Media.Channels;
 using Panacea.Modules.HospitalInformation.Views;
 using Panacea.Modularity.WebBrowsing;
+using Panacea.Modularity.UiManager;
 
 namespace Panacea.Modules.HospitalInformation.ViewModels
 {
@@ -58,13 +57,15 @@ namespace Panacea.Modules.HospitalInformation.ViewModels
             else if (ip.PageType.Equals("media"))
             {
                 var url = _core.HttpClient.RelativeToAbsoluteUri(ip.Url);
-                _core
-                    .GetMediaPlayerContainer()
-                    .Play(new MediaRequest(new IptvMedia() { URL = url })
+                if (_core.TryGetMediaPlayerContainer(out IMediaPlayerContainer player))
+                {
+                    player.Play(new MediaRequest(new IptvMedia() { URL = url })
                     {
                         MediaPlayerPosition = MediaPlayerPosition.Standalone
 
                     });
+                }
+
             }
             else if (!string.IsNullOrEmpty(ip.Content))
             {
@@ -78,7 +79,10 @@ namespace Panacea.Modules.HospitalInformation.ViewModels
 
         void OpenContent(InfoCategory category, InfoPage page)
         {
-            _core.GetUiManager().Navigate(new PagePresenterViewModel(page), true);
+            if (_core.TryGetUiManager(out IUiManager ui))
+            {
+                ui.Navigate(new PagePresenterViewModel(page), true);
+            }
         }
 
         private void OpenMediaPreview(object sender, MediaPreview mp)
@@ -107,21 +111,22 @@ namespace Panacea.Modules.HospitalInformation.ViewModels
                 case "video":
                     if ((mp.media.Files.Count > 0 && !string.IsNullOrEmpty(mp.media.Files[0])) || (mp.media.Urls.Count > 0 && !string.IsNullOrEmpty(mp.media.Urls[0])))
                     {
+                        IptvMedia media = null;
                         if (mp.media.Files.Count > 0 && !string.IsNullOrEmpty(mp.media.Files[0]))
-                            _core
-                                .GetMediaPlayerContainer()
-                                .Play(new MediaRequest(new IptvMedia() { URL = mp.media.Files[0] })
-                                    {
-                                        FullscreenMode = FullscreenMode.FullscreenOnly
-                                    });
+                        {
+                            media = new IptvMedia() { URL = mp.media.Files[0] };
+                        }
                         else if (mp.media.Urls.Count > 0 && !string.IsNullOrEmpty(mp.media.Urls[0]))
-                            _core
-                                .GetMediaPlayerContainer()
-                                .Play(
-                                    new MediaRequest(new IptvMedia() { URL = mp.media.Urls[0] })
-                                    {
-                                        FullscreenMode = FullscreenMode.FullscreenOnly
-                                    });
+                        {
+                            media = new IptvMedia() { URL = mp.media.Urls[0] };
+                        }
+                        if (media != null && _core.TryGetMediaPlayerContainer(out IMediaPlayerContainer player))
+                        {
+                            player.Play(new MediaRequest(media)
+                            {
+                                FullscreenMode = FullscreenMode.FullscreenOnly
+                            });
+                        }
                     }
                     break;
                 case "url":

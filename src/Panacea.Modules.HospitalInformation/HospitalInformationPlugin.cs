@@ -1,6 +1,5 @@
 ﻿using Panacea.Core;
 using Panacea.Modularity.UiManager;
-using Panacea.Modularity.UiManager.Extensions;
 using Panacea.Modules.HospitalInformation.Models;
 using Panacea.Modules.HospitalInformation.ViewModels;
 using System;
@@ -44,27 +43,26 @@ namespace Panacea.Modules.HospitalInformation
 
         public async void Call()
         {
-            if (_settings == null)
+            if (_core.TryGetUiManager(out IUiManager ui))
             {
-                await _core
-                .GetUiManager()
-                .DoWhileBusy(async () =>
+                if (_settings == null)
                 {
-                    try
+                    await ui.DoWhileBusy(async () =>
                     {
-                        await GetHospitalSettingsAsync();
-                        await GetCategoriesAsync();
-                        await GetPrimaryColorFromImageAsync();
-                    }
-                    catch (Exception ex)
-                    {
-                        _settings = null;
-                    }
-                });
+                        try
+                        {
+                            await GetHospitalSettingsAsync();
+                            await GetCategoriesAsync();
+                            await GetPrimaryColorFromImageAsync();
+                        }
+                        catch (Exception ex)
+                        {
+                            _settings = null;
+                        }
+                    });
+                }
+                ui.Navigate(new HospitalInformationListViewModel(_core, _settings, _categories, _color));
             }
-            _core
-                .GetUiManager()
-                .Navigate(new HospitalInformationListViewModel(_core, _settings, _categories, _color));
         }
 
         public void Dispose()

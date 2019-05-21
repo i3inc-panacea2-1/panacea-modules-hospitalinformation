@@ -2,8 +2,6 @@
 using Panacea.Core;
 using Panacea.Mvvm;
 using Panacea.Modularity.MediaPlayerContainer;
-using Panacea.Modularity.MediaPlayerContainer.Extensions;
-using Panacea.Modularity.UiManager.Extensions;
 using Panacea.Modules.HospitalInformation.Models;
 using Panacea.Modules.HospitalInformation.Views;
 using System;
@@ -15,6 +13,7 @@ using System.Windows;
 using System.Windows.Input;
 using Panacea.Modularity.Media.Channels;
 using System.Windows.Media;
+using Panacea.Modularity.UiManager;
 
 namespace Panacea.Modules.HospitalInformation.ViewModels
 {
@@ -58,7 +57,7 @@ namespace Panacea.Modules.HospitalInformation.ViewModels
 
         public string CategoriesText { get; protected set; }
 
-  
+
         public ICommand LoadedCommand { get; set; }
 
         public ICommand OpenCommand { get; set; }
@@ -78,7 +77,7 @@ namespace Panacea.Modules.HospitalInformation.ViewModels
         public Visibility ContactVisibility { get; set; }
 
         public HospitalInformationListViewModel(
-            PanaceaServices core, 
+            PanaceaServices core,
             HospitalData settings,
             List<InfoCategory> categories,
             Brush color)
@@ -92,14 +91,15 @@ namespace Panacea.Modules.HospitalInformation.ViewModels
             OpenCommand = new RelayCommand(async (args) => await GetInfoPagesFromServer(args as InfoCategory));
             OpenMapCommand = new RelayCommand(args =>
             {
-                _core
-                .GetUiManager()
-                .Navigate(
-                    new MapControlViewModel(
-                        Convert.ToDouble(_settings.Lat, CultureInfo.InvariantCulture),
-                        Convert.ToDouble(_settings.Lng, CultureInfo.InvariantCulture)));
+                if (_core.TryGetUiManager(out IUiManager ui))
+                {
+                    ui.Navigate(
+                        new MapControlViewModel(
+                            Convert.ToDouble(_settings.Lat, CultureInfo.InvariantCulture),
+                            Convert.ToDouble(_settings.Lng, CultureInfo.InvariantCulture)));
+                }
             });
-            
+
             OpenContactCommand = new RelayCommand(args =>
             {
                 //todo _com.RaiseEvent("ShowContact", null, null);
@@ -112,18 +112,23 @@ namespace Panacea.Modules.HospitalInformation.ViewModels
             {
                 _videoPlayed = true;
                 var url = _core.HttpClient.RelativeToAbsoluteUri(_settings.IntroductionVideo.Url);
-                var res = _core
-                    .GetMediaPlayerContainer()
-                    ?.Play(new MediaRequest(new IptvMedia { URL = url }));
-                res.Stopped += Res_Stopped;
-                res.Ended += Res_Stopped;
-                res.Error += Res_Stopped;
+                if (_core.TryGetMediaPlayerContainer(out IMediaPlayerContainer player))
+                {
+                    var res = player.Play(new MediaRequest(new IptvMedia { URL = url }));
+                    res.Stopped += Res_Stopped;
+                    res.Ended += Res_Stopped;
+                    res.Error += Res_Stopped;
+                }
+
             }
         }
 
         private void Res_Stopped(object sender, EventArgs e)
         {
-            _core.GetUiManager().GoBack();
+            if (_core.TryGetUiManager(out IUiManager ui))
+            {
+                ui.GoBack();
+            }
         }
 
         public ICommand OpenMapCommand { get; set; }
@@ -133,26 +138,28 @@ namespace Panacea.Modules.HospitalInformation.ViewModels
 
         private async Task GetInfoPagesFromServer(InfoCategory cat)
         {
-            await _core.GetUiManager().DoWhileBusy(async () =>
+            if (_core.TryGetUiManager(out IUiManager ui))
             {
-                try
+                await ui.DoWhileBusy(async () =>
                 {
-                    var response =
-                       await _core.HttpClient.GetObjectAsync<List<InfoPage>>("hospitalinfo/get_infopages/" + cat.Id + "/");
-                    if (!response.Success) return;
-                    var pages = response.Result;
-
-                    if (pages.Count > 0)
+                    try
                     {
-                        var vm = new HospitalInformationDetailsViewModel(_core, _settings, cat, pages);
-                        _core.GetUiManager().Navigate(vm);
-                    }
-                }
-                catch
-                {
-                }
-            });
+                        var response =
+                           await _core.HttpClient.GetObjectAsync<List<InfoPage>>("hospitalinfo/get_infopages/" + cat.Id + "/");
+                        if (!response.Success) return;
+                        var pages = response.Result;
 
+                        if (pages.Count > 0)
+                        {
+                            var vm = new HospitalInformationDetailsViewModel(_core, _settings, cat, pages);
+                            ui.Navigate(vm);
+                        }
+                    }
+                    catch
+                    {
+                    }
+                });
+            }
         }
 
         void OpenPages(InfoCategory ic, List<InfoPage> pages)
