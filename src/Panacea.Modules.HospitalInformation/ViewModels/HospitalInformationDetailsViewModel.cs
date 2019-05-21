@@ -10,6 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Panacea.Modularity.Media.Channels;
 using Panacea.Modules.HospitalInformation.Views;
+using Panacea.Modularity.WebBrowsing;
 
 namespace Panacea.Modules.HospitalInformation.ViewModels
 {
@@ -52,8 +53,7 @@ namespace Panacea.Modules.HospitalInformation.ViewModels
             //todo _socket.PopularNotify("HospitalInformation", "InfoPage", ip.Id);
             if (ip.PageType.Equals("url"))
             {
-                //todo _com.OpenUri("chromium:?url=" + HttpUtility.UrlEncode(ip.Url));
-                return;
+                _core.GetWebBrowser().OpenUnmanaged(ip.Url);
             }
             else if (ip.PageType.Equals("media"))
             {

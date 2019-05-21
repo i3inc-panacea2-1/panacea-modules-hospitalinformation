@@ -114,7 +114,7 @@ namespace Panacea.Modules.HospitalInformation.ViewModels
                 var url = _core.HttpClient.RelativeToAbsoluteUri(_settings.IntroductionVideo.Url);
                 var res = _core
                     .GetMediaPlayerContainer()
-                    .Play(new MediaRequest(new IptvMedia { URL = url }));
+                    ?.Play(new MediaRequest(new IptvMedia { URL = url }));
                 res.Stopped += Res_Stopped;
                 res.Ended += Res_Stopped;
                 res.Error += Res_Stopped;
