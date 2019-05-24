@@ -52,7 +52,10 @@ namespace Panacea.Modules.HospitalInformation.ViewModels
             //todo _socket.PopularNotify("HospitalInformation", "InfoPage", ip.Id);
             if (ip.PageType.Equals("url"))
             {
-                _core.GetWebBrowser().OpenUnmanaged(ip.Url);
+                if (_core.TryGetWebBrowser(out IWebBrowserPlugin web))
+                {
+                    web.OpenUnmanaged(ip.Url);
+                }
             }
             else if (ip.PageType.Equals("media"))
             {

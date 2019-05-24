@@ -1,28 +1,45 @@
-﻿<UserControl x:Class="Panacea.Modules.HospitalInformation.Views.PagePresenter"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Panacea.Modules.HospitalInformation.Views"
-             xmlns:wpf="clr-namespace:TheArtOfDev.HtmlRenderer.WPF;assembly=HtmlRenderer.WPF"
-             xmlns:controls="clr-namespace:Panacea.Controls;assembly=Panacea.Controls"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+﻿<UserControl
+    x:Class="Panacea.Modules.HospitalInformation.Views.PagePresenter"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:Panacea.Controls;assembly=Panacea.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Panacea.Modules.HospitalInformation.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:wpf="clr-namespace:TheArtOfDev.HtmlRenderer.WPF;assembly=HtmlRenderer.WPF"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
     <Grid Background="White">
         <Grid.RowDefinitions>
-            <RowDefinition Height="1.2*"/>
-            <RowDefinition Height="9*"/>
+            <RowDefinition Height="1.2*" />
+            <RowDefinition Height="9*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Grid Name="BreadcrumpGrid" Grid.Row="0" Background="Black" >
+        <Grid
+            Name="BreadcrumpGrid"
+            Grid.Row="0"
+            Background="Black">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Name="CategoryName" Foreground="White" FontSize="28" TextAlignment="Left" VerticalAlignment="Center" Margin="20,0,0,0" />
-                <controls:MaterialIcon Icon="keyboard_arrow_down" Margin="10"/>
-                <controls:MaterialIcon Icon="keyboard_arrow_right" Margin="10"/>
-                <TextBlock Text="{Binding Name}" Foreground="White" FontSize="28" TextAlignment="Left" VerticalAlignment="Center" Margin="20,0,20,0"/>
+                <TextBlock
+                    Name="CategoryName"
+                    Margin="20,0,0,0"
+                    VerticalAlignment="Center"
+                    FontSize="28"
+                    Foreground="White"
+                    TextAlignment="Left" />
+                <controls:MaterialIcon Margin="10" Icon="keyboard_arrow_down" />
+                <controls:MaterialIcon Margin="10" Icon="keyboard_arrow_right" />
+                <TextBlock
+                    Margin="20,0,20,0"
+                    VerticalAlignment="Center"
+                    FontSize="28"
+                    Foreground="White"
+                    Text="{Binding Name}"
+                    TextAlignment="Left" />
             </StackPanel>
             <!--<Image HorizontalAlignment="Right" Source="Pictures/hospital info.png" Margin="20,23,20,20" PreviewMouseLeftButtonUp="Image_PreviewMouseLeftButtonUp"/>-->
         </Grid>
@@ -30,25 +47,50 @@
         <Grid Grid.Row="2" Grid.Column="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="200" />
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <ScrollViewer VerticalAlignment="Stretch" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Hidden" Background="White" HorizontalAlignment="Stretch">
-                <ItemsControl IsTabStop="False" Name="MediasControl" Margin="10" VerticalAlignment="Stretch" BorderThickness="0,0,2,0" BorderBrush="#FFC3C3C3" HorizontalAlignment="Stretch">
+            <ScrollViewer
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Background="White"
+                HorizontalScrollBarVisibility="Disabled"
+                VerticalScrollBarVisibility="Hidden">
+                <ItemsControl
+                    Name="MediasControl"
+                    Margin="10"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Stretch"
+                    BorderBrush="#FFC3C3C3"
+                    BorderThickness="0,0,2,0"
+                    IsTabStop="False">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Grid Margin="10,10,20,10" Tag="{Binding}"  Background="Black" HorizontalAlignment="Stretch">
+                            <Grid
+                                Margin="10,10,20,10"
+                                HorizontalAlignment="Stretch"
+                                Background="Black"
+                                Tag="{Binding}">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="0.8*"/>
-                                    <RowDefinition Height="0.2*"/>
+                                    <RowDefinition Height="0.8*" />
+                                    <RowDefinition Height="0.2*" />
                                 </Grid.RowDefinitions>
-                                <Image Grid.Row="0" Source="{Binding previewImg}" HorizontalAlignment="Stretch" Margin="10,10,10,0"/>
-                                <TextBlock Grid.Row="1" Text="{Binding title}" Foreground="White" HorizontalAlignment="Stretch" Margin="10,0,10,10"/>
+                                <Image
+                                    Grid.Row="0"
+                                    Margin="10,10,10,0"
+                                    HorizontalAlignment="Stretch"
+                                    Source="{Binding previewImg}" />
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Margin="10,0,10,10"
+                                    HorizontalAlignment="Stretch"
+                                    Foreground="White"
+                                    Text="{Binding title}" />
                             </Grid>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <StackPanel Orientation="Vertical" VerticalAlignment="Top"/>
+                            <StackPanel VerticalAlignment="Top" Orientation="Vertical" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                 </ItemsControl>
@@ -56,13 +98,17 @@
 
             <!--<WebBrowser Grid.Row="0" Grid.Column="1" Name="ContentWebBrowser" ScrollViewer.HorizontalScrollBarVisibility="Hidden" ScrollViewer.VerticalScrollBarVisibility="Hidden" />-->
 
-            <wpf:HtmlPanel Text="{Binding Page.Content}" Margin="10"/>
+            <wpf:HtmlPanel Margin="10" Text="{Binding Page.Content}" />
 
-            <Rectangle Grid.Column="1" Grid.Row="2" VerticalAlignment="Bottom" Height="200">
+            <Rectangle
+                Grid.Row="2"
+                Grid.Column="1"
+                Height="200"
+                VerticalAlignment="Bottom">
                 <Rectangle.Fill>
-                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                        <GradientStop Offset="0" Color="#77FFFFFF"/>
-                        <GradientStop Color="White" Offset="1"/>
+                    <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                        <GradientStop Offset="0" Color="#77FFFFFF" />
+                        <GradientStop Offset="1" Color="White" />
                     </LinearGradientBrush>
                 </Rectangle.Fill>
             </Rectangle>
