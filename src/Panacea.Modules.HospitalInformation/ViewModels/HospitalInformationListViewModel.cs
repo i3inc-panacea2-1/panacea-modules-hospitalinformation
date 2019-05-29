@@ -125,6 +125,10 @@ namespace Panacea.Modules.HospitalInformation.ViewModels
 
         private void Res_Stopped(object sender, EventArgs e)
         {
+            var res = sender as IMediaResponse;
+            res.Stopped -= Res_Stopped;
+            res.Ended -= Res_Stopped;
+            res.Error -= Res_Stopped;
             if (_core.TryGetUiManager(out IUiManager ui))
             {
                 ui.GoBack();
