@@ -31,7 +31,6 @@ namespace Panacea.Modules.HospitalInformation
                 _core.UserService.UserLoggedOut += UserService_UserChanged;
                 _core.UserService.UserLoggedIn += UserService_UserChanged;
             }
-
             return Task.CompletedTask;
         }
 
@@ -79,6 +78,7 @@ namespace Panacea.Modules.HospitalInformation
         {
             return Task.CompletedTask;
         }
+
         private async Task GetCategoriesAsync()
         {
             try
@@ -111,6 +111,7 @@ namespace Panacea.Modules.HospitalInformation
                 _color = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Color.FromRgb(c.R, c.G, c.B));
             }
         }
+
         private async Task GetHospitalSettingsAsync()
         {
             try
@@ -126,8 +127,6 @@ namespace Panacea.Modules.HospitalInformation
                         //todo MainButton?.Frames.Add(_tile);
                     }
                 }
-
-
             }
             catch { }
         }

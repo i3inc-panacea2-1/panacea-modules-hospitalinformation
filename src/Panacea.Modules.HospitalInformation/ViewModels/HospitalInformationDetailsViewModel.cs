@@ -65,10 +65,8 @@ namespace Panacea.Modules.HospitalInformation.ViewModels
                     player.Play(new MediaRequest(new IptvMedia() { URL = url })
                     {
                         MediaPlayerPosition = MediaPlayerPosition.Standalone
-
                     });
                 }
-
             }
             else if (!string.IsNullOrEmpty(ip.Content))
             {
