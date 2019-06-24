@@ -60,12 +60,11 @@
             Orientation="Vertical"
             TextElement.Foreground="{Binding Color}">
             <TextBlock
-                mi:Material.RelativeFontSizeRatio="1.8"
+                FontSize="{DynamicResource FontSize-Xxx-Large}"
                 FontWeight="DemiBold"
                 Text="{Binding Settings.DisplayName}"
                 TextWrapping="Wrap" />
             <TextBlock
-                mi:Material.RelativeFontSizeRatio="1.0"
                 Text="{Binding Settings.CategoriesText}"
                 TextWrapping="Wrap" />
         </StackPanel>
@@ -88,7 +87,6 @@
                 <TextBlock
                     Grid.Row="1"
                     VerticalAlignment="Center"
-                    mi:Material.RelativeFontSizeRatio="1.0"
                     Foreground="{Binding Color}"
                     Text="{multilinguality1:Translate 'Find us',
                                                       'HospitalInformation'}"
@@ -114,7 +112,6 @@
                 <TextBlock
                     Grid.Row="1"
                     VerticalAlignment="Center"
-                    mi:Material.RelativeFontSizeRatio="1.0"
                     Foreground="{Binding Color}"
                     Text="{multilinguality1:Translate 'Contact us',
                                                       'HospitalInformation'}"
@@ -167,7 +164,7 @@
                                     <Grid Grid.Row="1" Background="White">
                                         <TextBlock
                                             Margin="10,5,10,10"
-                                            mi:Material.RelativeFontSizeRatio="1.5"
+                                            FontSize="{DynamicResource FontSize-Xx-Large}"
                                             Foreground="Black"
                                             Text="{Binding Name}" />
                                     </Grid>

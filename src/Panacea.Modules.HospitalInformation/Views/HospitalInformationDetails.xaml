@@ -49,7 +49,7 @@
                 Grid.Column="1"
                 Grid.ColumnSpan="3"
                 VerticalAlignment="Bottom"
-                shared1:Material.RelativeFontSizeRatio="2.1"
+                FontFamily="{DynamicResource FontSize-Huge}"
                 FontWeight="DemiBold"
                 Text="{Binding Category.Name}" />
             <TextBlock
@@ -57,7 +57,7 @@
                 Grid.Column="1"
                 Grid.ColumnSpan="3"
                 VerticalAlignment="Top"
-                shared1:Material.RelativeFontSizeRatio=".9"
+                FontSize="{DynamicResource FontSize-Small}"
                 Foreground="#777777"
                 Text="{Binding Settings.DisplayName}" />
 
@@ -68,7 +68,6 @@
                 Grid.RowSpan="3"
                 Margin="30,20"
                 VerticalAlignment="Top"
-                shared1:Material.RelativeFontSizeRatio="1.0"
                 Text="{Binding Category.Description}"
                 TextWrapping="Wrap" />
             <Grid
@@ -83,7 +82,6 @@
                                 Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.OpenCommand}"
                                 CommandParameter="{Binding}"
                                 Content="{Binding Name}"
-                                shared1:Material.RelativeFontSizeRatio="1.0"
                                 Style="{DynamicResource PrimaryButton}" />
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
