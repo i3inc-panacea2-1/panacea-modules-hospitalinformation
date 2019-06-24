@@ -2,12 +2,12 @@
     x:Class="Panacea.Modules.HospitalInformation.Views.HospitalInformationList"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="clr-namespace:Panacea.Controls.Behaviors;assembly=Panacea.Controls"
     xmlns:controls="clr-namespace:Panacea.Modules.HospitalInformation.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Panacea.Modules.HospitalInformation"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:mi="clr-namespace:Panacea.Controls;assembly=Panacea.Controls"
-    xmlns:behaviors="clr-namespace:Panacea.Controls.Behaviors;assembly=Panacea.Controls"
     xmlns:models="clr-namespace:Panacea.Modules.HospitalInformation.Models"
     xmlns:multilinguality1="clr-namespace:Panacea.Multilinguality;assembly=Panacea.Multilinguality"
     d:DesignHeight="900"
@@ -60,13 +60,11 @@
             Orientation="Vertical"
             TextElement.Foreground="{Binding Color}">
             <TextBlock
-                FontSize="{DynamicResource FontSize-Xxx-Large}"
+                FontSize="{DynamicResource FontSize-X-Large}"
                 FontWeight="DemiBold"
                 Text="{Binding Settings.DisplayName}"
                 TextWrapping="Wrap" />
-            <TextBlock
-                Text="{Binding Settings.CategoriesText}"
-                TextWrapping="Wrap" />
+            <TextBlock Text="{Binding Settings.CategoriesText}" TextWrapping="Wrap" />
         </StackPanel>
 
         <Button
@@ -123,9 +121,9 @@
             Name="Scroller"
             Grid.Row="1"
             Grid.ColumnSpan="10"
+            behaviors:ScrollViewerBehaviors.ScrollsHorizontally="true"
             HorizontalScrollBarVisibility="Auto"
             PanningMode="HorizontalOnly"
-            behaviors:ScrollViewerBehaviors.ScrollsHorizontally="true"
             VerticalScrollBarVisibility="Disabled">
             <ItemsControl
                 Margin="20,30,20,90"
@@ -164,7 +162,7 @@
                                     <Grid Grid.Row="1" Background="White">
                                         <TextBlock
                                             Margin="10,5,10,10"
-                                            FontSize="{DynamicResource FontSize-Xx-Large}"
+                                            FontSize="{DynamicResource FontSize-Normal}"
                                             Foreground="Black"
                                             Text="{Binding Name}" />
                                     </Grid>
