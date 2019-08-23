@@ -4,6 +4,7 @@ using Panacea.Modules.HospitalInformation.Models;
 using Panacea.Modules.HospitalInformation.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Panacea.Modules.HospitalInformation
 {
-    public class HospitalInformationPlugin : ICallablePlugin
+    public class HospitalInformationPlugin : ICallablePlugin,ILiveTilesPlugin
     {
         private readonly PanaceaServices _core;
         public static bool IntroVideoPlayed;
@@ -24,14 +25,19 @@ namespace Panacea.Modules.HospitalInformation
             _core = core;
         }
 
-        public Task BeginInit()
+        public async Task BeginInit()
         {
             if (_core.UserService != null)
             {
                 _core.UserService.UserLoggedOut += UserService_UserChanged;
                 _core.UserService.UserLoggedIn += UserService_UserChanged;
             }
-            return Task.CompletedTask;
+            try
+            {
+                await GetHospitalSettingsAsync();
+            }
+            catch { }
+
         }
 
         private Task UserService_UserChanged(IUser user)
@@ -44,23 +50,24 @@ namespace Panacea.Modules.HospitalInformation
         {
             if (_core.TryGetUiManager(out IUiManager ui))
             {
-                if (_settings == null)
+                await ui.DoWhileBusy(async () =>
                 {
-                    await ui.DoWhileBusy(async () =>
+                   
+                    try
                     {
-                        try
+                        if (_settings == null)
                         {
                             await GetHospitalSettingsAsync();
-                            await GetCategoriesAsync();
-                            await GetPrimaryColorFromImageAsync();
                         }
-                        catch (Exception ex)
-                        {
-                            _settings = null;
-                        }
-                    });
-                }
-                ui.Navigate(new HospitalInformationListViewModel(_core, _settings, _categories, _color));
+                        await GetCategoriesAsync();
+                        await GetPrimaryColorFromImageAsync();
+                        ui.Navigate(new HospitalInformationListViewModel(_core, _settings, _categories, _color));
+                    }
+                    catch (Exception ex)
+                    {
+                        _settings = null;
+                    }
+                });
             }
         }
 
@@ -112,19 +119,24 @@ namespace Panacea.Modules.HospitalInformation
             }
         }
 
+        TileLogoViewModel _tile;
+
+        public ObservableCollection<LiveTileFrame> Frames { get; private set; } = new ObservableCollection<LiveTileFrame>();
+
         private async Task GetHospitalSettingsAsync()
         {
             try
             {
                 var response =
                     await _core.HttpClient.GetObjectAsync<HospitalData>("hospitalinfo/get_hospitalinfo/");
+                Frames.Clear();
                 if (response.Success)
                 {
                     _settings = response.Result;
                     if (!string.IsNullOrEmpty(_settings.FrontImgThumbnail?.Image) /*&& _tile == null*/)
                     {
-                        //todo _tile = new TileLogo(GlobalSettings.FrontImgThumbnail?.Image);
-                        //todo MainButton?.Frames.Add(_tile);
+                        _tile = new TileLogoViewModel(_settings.FrontImgThumbnail?.Image);
+                        Frames.Add(new LiveTileFrame(_tile, 8000));
                     }
                 }
             }

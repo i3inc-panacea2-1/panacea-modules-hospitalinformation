@@ -65,6 +65,7 @@
     <Compile Include="ViewModels\HospitalInformationListViewModel.cs" />
     <Compile Include="ViewModels\MapControlViewModel.cs" />
     <Compile Include="ViewModels\PagePresenterViewModel.cs" />
+    <Compile Include="ViewModels\TileLogoViewModel.cs" />
     <Compile Include="Views\HospitalInformationDetails.xaml.cs">
       <DependentUpon>HospitalInformationDetails.xaml</DependentUpon>
     </Compile>
@@ -77,6 +78,9 @@
     <Compile Include="HospitalInformationPlugin.cs" />
     <Compile Include="Views\PagePresenter.xaml.cs">
       <DependentUpon>PagePresenter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TileLogo.xaml.cs">
+      <DependentUpon>TileLogo.xaml</DependentUpon>
     </Compile>
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -95,6 +99,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PagePresenter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TileLogo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
